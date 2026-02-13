@@ -21,23 +21,14 @@ Database tersimpan langsung di Google Drive milik pengguna.
 
 ![Dashboard Input](screenshots/Input.png)
 
----
-
 ### 📜 Transaction History
 
 ![Transaction History](screenshots/Riwayat.png)
 
----
-
 ### 📊 Report & Analytics
 
-**Statistics Overview**
 ![Statistics Summary](screenshots/Statistik.png)
-
-**Interactive Chart**
 ![Statistics Chart](screenshots/StatistikChart.png)
-
----
 
 ### 📥 Export CSV
 
