@@ -1,196 +1,199 @@
-# 💰 Money Tracker Pro (v4.2.0-Stable)
+# 💰 Money Tracker Pro
 
-**Money Tracker Pro** adalah aplikasi pencatatan keuangan berbasis web
-(*Web App*) yang berjalan di ekosistem Google (**Google Apps Script** &
-**Google Sheets**).
+> Web-based personal finance tracker built with **Google Apps Script** and **Google Sheets**.
 
-Aplikasi ini dirancang sebagai solusi manajemen keuangan yang **praktis,
-gratis, aman**, dan sepenuhnya **privat** karena database tersimpan di
-Google Drive milik pengguna sendiri.
+Money Tracker Pro adalah aplikasi pencatatan keuangan harian berbasis web yang berjalan sepenuhnya di ekosistem Google.
+Aplikasi ini dirancang sebagai solusi manajemen keuangan yang:
 
-Dikembangkan dengan pendekatan **Mobile-First**, aplikasi ini
-menghadirkan pengalaman pengguna setara aplikasi native dengan fitur
-interaktif seperti **Slide-to-Action** dan visualisasi data
-**real-time**.
+* ✅ Gratis
+* 🔒 Privat
+* ⚡ Cepat
+* 📱 Mobile-first
+* ☁️ Tanpa server eksternal
 
-------------------------------------------------------------------------
+Database tersimpan langsung di Google Drive milik pengguna.
 
-## ✨ Fitur Utama
+---
 
--   ⚡ **Pencatatan Cepat**\
-    Input pemasukan, pengeluaran, dan transfer antar dompet dengan UI
-    responsif.
+## 📸 Preview
 
--   👛 **Multi-Wallet**\
-    Kelola saldo dari berbagai sumber (Tunai, Bank, E-Wallet) secara
-    terpisah namun terintegrasi.
+### 💳 Dashboard / Input Transaction
 
--   👉 **Slide-to-Action**\
-    Geser kartu transaksi ke kiri/kanan untuk Edit atau Hapus data
-    (mirip aplikasi native iOS/Android).
+![Dashboard Input](screenshots/Input.png)
 
--   📊 **Dashboard Statistik**\
-    Visualisasi pengeluaran menggunakan *Doughnut Chart* interaktif.
+### 📜 Transaction History
 
--   🔍 **Filter Canggih**\
-    Filter riwayat berdasarkan periode (Mingguan, Bulanan, Tahunan) atau
-    tanggal kustom.
+![Transaction History](screenshots/Riwayat.png)
 
--   📁 **Ekspor Data**\
-    Unduh laporan keuangan ke format **.CSV** yang kompatibel dengan
-    Excel.
+### 📊 Report & Analytics
 
--   🔐 **100% Gratis & Privat**\
-    Tidak ada biaya langganan, tidak ada iklan, dan data sepenuhnya
-    milik pengguna.
+#### Statistics Summary
 
-------------------------------------------------------------------------
+![Statistics Summary](screenshots/Statistik.png)
 
-## 🛠️ Spesifikasi Teknis
+#### Statistics Chart
 
-Sistem dibangun dengan arsitektur **N-Tier Thin Client**.
+![Statistics Chart](screenshots/StatistikChart.png)
 
-  -----------------------------------------------------------------------
-  Komponen                            Spesifikasi
-  ----------------------------------- -----------------------------------
-  **Backend Runtime**                 Google Apps Script (GAS) V8 Engine
+### 📥 Export CSV
 
-  **Database**                        Google Sheets API (Flat-File
-                                      Relational)
+![Export CSV](screenshots/Ekspor.png)
 
-  **Frontend Framework**              Bootstrap 5.3.0 (Responsive
-                                      Container Max-Width 480px)
+---
 
-  **Typography**                      Plus Jakarta Sans (Weight 400--800)
+## ✨ Features
 
-  **Charting Engine**                 Chart.js 4.4.1 (Optimized for
-                                      Mobile)
+### ⚡ Quick Transaction Input
 
-  **Touch Interaction**               Native JavaScript Touch Events
-                                      (`touchstart`, `touchmove`,
-                                      `touchend`)
+Catat pemasukan, pengeluaran, dan transfer antar wallet dengan UI responsif.
 
-  **Data Security**                   Input Sanitization (Regex) &
-                                      Server-side Validation
-  -----------------------------------------------------------------------
+### 💳 Multi Wallet Support
 
-------------------------------------------------------------------------
+Kelola saldo dari berbagai sumber (Tunai, Bank, E-Wallet).
 
-## 📂 Struktur Direktori
+### 👉 Slide-to-Action UI
 
-    /
-    ├── backend/
-    │   └── Code.gs       # Logika Server-side (CRUD & Kalkulasi)
-    ├── frontend/
-    │   └── Index.html    # Antarmuka Pengguna (HTML/CSS/JS)
-    └── README.md         # Dokumentasi Proyek
+Gesture geser untuk edit atau hapus transaksi seperti aplikasi mobile native.
 
-------------------------------------------------------------------------
+### 📊 Real-time Dashboard
 
-## 🚀 Panduan Instalasi
+Visualisasi pengeluaran menggunakan interactive doughnut chart.
 
-Tidak perlu instal aplikasi apa pun di HP atau laptop. Cukup pasang di
-akun Google Anda.
+### 🔍 Advanced Filtering
 
-------------------------------------------------------------------------
+Filter riwayat berdasarkan periode:
 
-### ✅ Langkah 1: Persiapan Database
+* Mingguan
+* Bulanan
+* Tahunan
+* Custom date range
 
-1.  **Buka Google Sheets** dan buat spreadsheet baru.
-2.  **Atur Nama Sheet**:
-    * Ubah `Sheet1` menjadi: **`Transaksi`**
-    * Buat sheet baru bernama: **`Wallets`**
-3.  **Atur Header Kolom (Wajib)**:
-    Isi baris pertama (**Row 1**) pada masing-masing sheet dengan nama kolom berikut (pastikan ejaan sama persis):
+### 📥 CSV Export
 
-    **Sheet `Transaksi`:**
-    | Tanggal | Tipe | Kategori | Wallet | Nominal | Catatan |
+Ekspor laporan keuangan kompatibel dengan Microsoft Excel.
 
-    **Sheet `Wallets`:**
-    | Nama Wallet | Saldo |
+### 🔒 100% Private
 
-4.  **Isi Data Awal (Opsional)**:
-    Pada sheet **Wallets**, Anda bisa mulai memasukkan daftar akun keuangan Anda:
-    * **Kolom A**: Nama Dompet (contoh: BCA, Tunai, Gopay)
-    * **Kolom B**: Saldo awal (isi dengan angka saja, contoh: `500000`)
+Data tersimpan di Google Drive pengguna tanpa server pihak ketiga.
 
-------------------------------------------------------------------------
+---
 
-### ✅ Langkah 2 --- Pemasangan Kode
+## 🏗 Architecture
 
-1.  Di Google Sheets → klik **Extensions → Apps Script**.
+Aplikasi menggunakan **N-Tier Thin Client Architecture**.
 
-2.  Hapus kode bawaan:
+### Tech Stack
 
-    ``` javascript
-    function myFunction() { }
-    ```
+| Component       | Technology                             |
+| --------------- | -------------------------------------- |
+| Backend Runtime | Google Apps Script (V8 Engine)         |
+| Database        | Google Sheets API                      |
+| Frontend        | Bootstrap 5                            |
+| Chart Engine    | Chart.js                               |
+| Typography      | Plus Jakarta Sans                      |
+| Interaction     | Native JavaScript Touch Events         |
+| Security        | Input Sanitization + Server Validation |
 
-3.  Salin isi file:
+---
 
-        backend/Code.gs
+## 📁 Project Structure
 
-    lalu tempel ke editor Apps Script.
+```
+/
+├── backend/
+│   └── Code.gs        # Server-side logic (CRUD & calculation)
+├── frontend/
+│   └── Index.html     # UI interface
+├── screenshots/       # Application preview images
+└── README.md
+```
 
-4.  Klik **+ (Add File)** → pilih **HTML** → beri nama:
+---
 
-        Index
+## ⚙️ Installation Guide
 
-5.  Salin isi file:
+Tidak perlu instal software tambahan.
+Cukup gunakan akun Google.
 
-        frontend/Index.html
+---
 
-    lalu tempel ke editor.
+### 1️⃣ Setup Database (Google Sheets)
 
-6.  Klik **Save (💾)**.
+Buat spreadsheet baru dengan struktur berikut.
 
-------------------------------------------------------------------------
+#### Sheet: `Transaksi`
 
-### ✅ Langkah 3 --- Deployment
+| Tanggal | Tipe | Kategori | Wallet | Nominal | Catatan |
 
-1.  Klik **Deploy → New Deployment**.
+#### Sheet: `Wallets`
 
-2.  Pilih **Web App**.
+| Nama Wallet | Saldo |
 
-3.  Isi konfigurasi:
+Opsional: isi saldo awal pada sheet `Wallets`.
 
-    -   **Description**: `Money Tracker Pro v4.2.0`
-    -   **Execute as**: Me (email Anda)
-    -   **Who has access**:
-        -   `Anyone with Google account` (umum)
-        -   atau `Only myself` (pribadi)
+---
 
-4.  Klik **Deploy**.
+### 2️⃣ Setup Google Apps Script
 
-⚠️ **Penting:**\
-Saat pertama deploy, Google akan meminta izin akses (**Review
-Permissions**). Izinkan akses karena skrip membutuhkan akses ke
-spreadsheet Anda sendiri.
+1. Buka Google Sheets → **Extensions → Apps Script**
+2. Hapus kode default:
 
-5.  Salin **Web App URL** yang muncul --- itu adalah link aplikasi Anda.
+```
+function myFunction() {}
+```
 
-------------------------------------------------------------------------
+3. Copy isi:
 
-## 🔒 Privasi & Keamanan
+```
+backend/Code.gs
+```
 
-### ✅ Tanpa Pihak Ketiga
+4. Tambahkan file HTML bernama:
 
-Kode berjalan sepenuhnya di akun Google Anda. Pengembang tidak memiliki
-akses ke data keuangan pengguna.
+```
+Index
+```
 
-### ✅ Open Source
+5. Copy isi:
 
-Kode transparan dan dapat diaudit langsung. Tidak ada skrip tersembunyi
-yang mengirim data ke luar.
+```
+frontend/Index.html
+```
 
-------------------------------------------------------------------------
+6. Save project.
 
-## 📄 Lisensi & Kredit
+---
 
-**Money Tracker Pro v4.2.0-Stable**\
-Copyright © 2026 **Bayu Wicaksono**. All Rights Reserved.
+### 3️⃣ Deploy Web App
 
-Dibuat untuk tujuan penggunaan pribadi guna mempermudah
-pencatatan keuangan harian secara gratis.
+1. Deploy → New Deployment
+2. Pilih Web App
+3. Configure:
 
-------------------------------------------------------------------------
+* Execute as → Me
+* Who has access → sesuai kebutuhan
+
+4. Deploy
+5. Gunakan URL Web App yang diberikan.
+
+---
+
+## 🔐 Security & Privacy
+
+* Tidak menggunakan server eksternal
+* Tidak ada data dikirim ke pihak ketiga
+* Data tersimpan di Google Drive pengguna
+* Source code dapat diaudit
+
+---
+
+## 📜 License
+
+Copyright © 2026 Bayu Wicaksono
+For personal use.
+
+---
+
+## ⭐ Support
+
+Jika project ini membantu, jangan lupa ⭐ repository ini.
