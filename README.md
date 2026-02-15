@@ -126,11 +126,19 @@ Buat spreadsheet baru dengan struktur berikut.
 
 Opsional: isi saldo awal pada sheet `Wallets`.
 
+| Nama Wallet | Saldo |
+
+| Uang Tunai | 10000 |
+
+| Bank BCA | 20000 |
+
+| GoPay | 30000 |
+
 ---
 
 ### 2️⃣ Setup Google Apps Script
 
-1. Buka Google Sheets → **Extensions → Apps Script**
+1. Google Sheets → **Extensions → Apps Script**
 2. Hapus kode default:
 
 ```
