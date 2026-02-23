@@ -57,6 +57,25 @@
     .toast-container { z-index: 10000; bottom: 40px !important; }
     .toast { width: max-content !important; margin: 0 auto !important; border-radius: 16px !important; background: #0f172a !important; color: #fff !important; border: none !important; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .toast-body { padding: 12px 20px !important; font-size: 0.85rem; }
+
+    /* Fix 1-Click Date Picker */
+    .date-input-container { position: relative; width: 100%; }
+    input[type="date"].form-control { color: transparent; position: relative; }
+    input[type="date"].form-control:focus, 
+    input[type="date"].form-control:valid { color: var(--text-main); }
+    
+    input[type="date"].form-control::before {
+      content: attr(placeholder);
+      position: absolute;
+      left: 14px;
+      color: var(--text-muted);
+      pointer-events: none;
+      }
+      input[type="date"].form-control:focus::before,
+      input[type="date"].form-control:valid::before {
+        display: none !important;
+        }
+    
   </style>
 </head>
 <body>
@@ -172,28 +191,34 @@
       </div>
     </div>
 
-    <div class="tab-pane fade" id="tab-ex" role="tabpanel">
-      <div class="glass-card">
-        <label class="form-label-custom">Periode Transaksi</label>
-        <div class="d-flex gap-2 mb-3">
-          <input type="date" class="form-control" id="ex-start">
-          <input type="date" class="form-control" id="ex-end">
-        </div>
-        <button class="btn-main mb-3" onclick="processExport()">GENERATE PREVIEW</button>
-        <div id="export-preview-area" style="display:none;">
-          <div class="table-responsive">
-            <table class="table table-bordered table-sm small fw-bold" id="table-export" style="font-size: 0.7rem;">
-              <thead class="table-dark">
-                <tr><th>Kode PP</th><th>Tanggal</th><th>Dompet</th><th>Keterangan</th><th>Catatan</th><th>Debit</th><th>Kredit</th><th>Total</th></tr>
-              </thead>
-              <tbody id="export-body"></tbody>
-            </table>
-          </div>
-          <button class="btn btn-success w-100 fw-800 rounded-pill mt-3 py-3" onclick="downloadCSV()">DOWNLOAD CSV</button>
-        </div>
+<div class="tab-pane fade" id="tab-ex" role="tabpanel">
+  <div class="glass-card">
+    <label class="form-label-custom">Periode Transaksi</label>
+    
+    <div class="d-flex gap-2 mb-3">
+      <div class="date-input-container">
+        <input type="date" class="form-control" id="ex-start" placeholder="Tanggal Mulai" required>
+      </div>
+      <div class="date-input-container">
+        <input type="date" class="form-control" id="ex-end" placeholder="Tanggal Akhir" required>
       </div>
     </div>
+
+    <button class="btn-main mb-3" onclick="processExport()">GENERATE PREVIEW</button>
+
+    <div id="export-preview-area" style="display:none;">
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm small fw-bold" id="table-export" style="font-size: 0.7rem;">
+          <thead class="table-dark">
+            <tr><th>Kode PP</th><th>Tanggal</th><th>Dompet</th><th>Keterangan</th><th>Catatan</th><th>Debit</th><th>Kredit</th><th>Total</th></tr>
+          </thead>
+          <tbody id="export-body"></tbody>
+        </table>
+      </div>
+      <button class="btn btn-success w-100 fw-800 rounded-pill mt-3 py-3" onclick="downloadCSV()">DOWNLOAD CSV</button>
+    </div>
   </div>
+</div>
 
   <div class="footer-app"><p>&copy; 2026 Bayu Wicaksono | v4.2.1-Optimized | All Rights Reserved.</p></div>
 </div>
