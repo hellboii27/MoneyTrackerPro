@@ -34,7 +34,7 @@
     .form-control, .form-select { border-radius: 16px; border: 1.5px solid #f1f5f9; padding: 14px; font-size: 0.95rem; background: #f8fafc; font-weight: 600; }
     .btn-main { background: var(--primary); color: #fff; border-radius: 18px; padding: 18px; font-weight: 800; width: 100%; border: none; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2); }
     
-    /* FIX UI SLIDE - ANTI BOCOR */
+    /* FIX UI Slide  */
     .trx-item-wrapper { position: relative; overflow: hidden; border-radius: 20px; margin-bottom: 12px; touch-action: pan-y; background: transparent; }
     .slide-action { position: absolute; top: 0; bottom: 0; width: 100px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; color: white; z-index: 1; opacity: 0; visibility: hidden; transition: opacity 0.2s; }
     .action-edit { left: 0; background: var(--accent); border-radius: 20px 0 0 20px; }
@@ -195,7 +195,7 @@
     </div>
   </div>
 
-  <div class="footer-app"><p>&copy; 2026 Bayu Wicaksono | v4.2.0-Stable | All Rights Reserved.</p></div>
+  <div class="footer-app"><p>&copy; 2026 Bayu Wicaksono | v4.2.1-Optimized | All Rights Reserved.</p></div>
 </div>
 
 <script>
@@ -241,7 +241,27 @@
   function loadWallets() { google.script.run.withSuccessHandler(res => { walBalArr = res; const opts = res.map(w => `<option value="${w.name}">${w.name}</option>`).join(''); document.getElementById('wallet').innerHTML = opts; document.getElementById('walletTujuan').innerHTML = opts; updateSaldoDisplay(); }).getWalletBalances(); }
 
   /* --- Control --- */
-  function renderTrx() { const list = document.getElementById('transaction-list'), pag = document.getElementById('pagination-ctrl'); if (!allTrx.length) { list.innerHTML = '<p class="text-center py-5 small opacity-50 fw-bold">Belum ada data transaksi</p>'; pag.style.setProperty('display', 'none', 'important'); return; } pag.style.setProperty('display', 'flex', 'important'); const totalPages = Math.ceil(allTrx.length / rows); const slice = allTrx.slice((curPage - 1) * rows, curPage * rows); list.innerHTML = slice.map((t, i) => { const realIdx = ((curPage - 1) * rows) + i; const isInc = t.tipe.includes('In') || t.tipe === 'Pemasukan'; const col = getDynamicColor(t.kat); return `<div class="trx-item-wrapper"><div class="slide-action action-edit" onclick="handleEdit(${realIdx})">EDIT</div><div class="slide-action action-delete" onclick="handleDelete(${realIdx})">HAPUS</div><div class="trx-card-old" id="card-${realIdx}" style="border-left-color: ${col}" ontouchstart="ts(event, ${realIdx})" ontouchmove="tm(event, ${realIdx})" ontouchend="te(event, ${realIdx})"><div class="cat-icon-box" style="background:${col}15; color:${col}">${getDynamicIcon(t.kat)}</div><div class="flex-grow-1"><div class="small fw-bold">${t.kat}</div><div class="text-muted" style="font-size:0.7rem; line-height:1.2; margin-bottom:2px;">${t.note || '-'}</div><div class="text-muted" style="font-size:0.6rem; opacity:0.8;">${t.tgl} • ${t.wallet}</div></div><div class="fw-800 ${isInc ? 'text-success' : 'text-danger'}" style="font-size:0.9rem">${isInc ? '+' : '-'} Rp ${t.nominal.toLocaleString('id-ID')}</div></div></div>`; }).join(''); document.getElementById('pageDisplay').innerText = `${curPage} / ${totalPages}`; document.getElementById('btn-prev').disabled = (curPage === 1); document.getElementById('btn-next').disabled = (curPage === totalPages); }
+  function renderTrx() {
+    const list = document.getElementById('transaction-list'), pag = document.getElementById('pagination-ctrl');
+    if (!allTrx.length) {
+      list.innerHTML = '<p class="text-center py-5 small opacity-50 fw-bold">Belum ada data transaksi</p>';
+      pag.style.setProperty('display', 'none', 'important');
+      return;
+    }
+    pag.style.setProperty('display', 'flex', 'important');
+    const totalPages = Math.ceil(allTrx.length / rows);
+    const slice = allTrx.slice((curPage - 1) * rows, curPage * rows);
+    list.innerHTML = slice.map((t, i) => {
+      const realIdx = ((curPage - 1) * rows) + i;
+      const isInc = t.tipe.includes('In') || t.tipe === 'Pemasukan';
+      const col = getDynamicColor(t.kat);
+      return `<div class="trx-item-wrapper"><div class="slide-action action-edit" onclick="handleEdit(${realIdx})">EDIT</div><div class="slide-action action-delete" onclick="handleDelete(${realIdx})">HAPUS</div><div class="trx-card-old" id="card-${realIdx}" style="border-left-color: ${col}" ontouchstart="ts(event, ${realIdx})" ontouchmove="tm(event, ${realIdx})" ontouchend="te(event, ${realIdx})"><div class="cat-icon-box" style="background:${col}15; color:${col}">${getDynamicIcon(t.kat)}</div><div class="flex-grow-1"><div class="small fw-bold">${t.kat}</div><div class="text-muted" style="font-size:0.7rem; line-height:1.2; margin-bottom:2px;">${t.note || '-'}</div><div class="text-muted" style="font-size:0.6rem; opacity:0.8;">${t.tgl} • ${t.wallet}</div></div><div class="fw-800 ${isInc ? 'text-success' : 'text-danger'} text-nowrap ms-2" style="font-size:0.9rem">${isInc ? '+' : '-'} Rp ${t.nominal.toLocaleString('id-ID')}</div></div></div>`;
+    }).join('');
+    document.getElementById('pageDisplay').innerText = `${curPage} / ${totalPages}`;
+    document.getElementById('btn-prev').disabled = (curPage === 1);
+    document.getElementById('btn-next').disabled = (curPage === totalPages);
+  }
+
   function handleSave(e) { e.preventDefault(); if (document.getElementById('kategori').value === 'Lainnya' && !document.getElementById('kategoriKustom').value.trim()) { alert("Isi kategori!"); return; } loading(true); const p = { tipe: document.getElementById('tipe').value, kategori: document.getElementById('kategori').value, kategoriKustom: document.getElementById('kategoriKustom').value, wallet: document.getElementById('wallet').value, walletTujuan: document.getElementById('walletTujuan').value, jumlah: document.getElementById('jumlah').value.replace(/[^0-9]/g, ""), catatan: document.getElementById('catatan').value, tgl: document.getElementById('tglInput').value, rowId: document.getElementById('editRowId').value }; google.script.run.withSuccessHandler(() => { loading(false); document.getElementById('mainForm').reset(); document.getElementById('editRowId').value = ""; document.getElementById('btn-submit').innerText = "SIMPAN TRANSAKSI"; setDefaultDate(); toggleUI(); loadWallets(); showToast(); }).simpanTransaksi(p); }
   function toggleUI() { const t = document.getElementById('tipe').value; document.getElementById('kat-area').style.display = t === 'Transfer' ? 'none' : 'block'; document.getElementById('tujuan-area').style.display = t === 'Transfer' ? 'block' : 'none'; const cats = (t === 'Pemasukan') ? ["Gaji", "Bisnis", "Investasi", "Hadiah", "Fintech", "Lainnya"] : ["Makan & Minum", "Transportasi", "Belanja", "Tempat Tinggal", "Keluarga", "Hiburan", "Fintech", "Kesehatan", "Teman", "Hewan Peliharaan", "Keuangan", "Pribadi", "Sistem", "Lainnya"]; document.getElementById('kategori').innerHTML = cats.map(k => `<option value="${k}">${k}</option>`).join(''); checkLainnya(); }
   function checkLainnya() { document.getElementById('kat-kustom-area').style.display = document.getElementById('kategori').value === 'Lainnya' ? 'block' : 'none'; }
