@@ -2,16 +2,16 @@
  * Money Tracker Pro v4.3.0 | © 2026 Bayu Wicaksono
  */
 
-// --- Global Spreadsheet Configuration ---
+/** --- Global Spreadsheet Configuration --- */
 const SS = SpreadsheetApp.getActiveSpreadsheet();
 const SH_TRX = SS.getSheetByName('Transaksi');
 const SH_WAL = SS.getSheetByName('Wallets');
-const TZ = Session.getScriptTimeZone(); // auto timezone
+const TZ = Session.getScriptTimeZone();
 
 const CACHE = CacheService.getScriptCache();
 const WALLET_CACHE_KEY = "wallet_balances";
 
-/** Entry point */
+/** Render application web interface */
 function doGet() {
   return HtmlService.createTemplateFromFile('Index').evaluate()
     .setTitle('Money Tracker Pro')
@@ -21,10 +21,12 @@ function doGet() {
 
 /** --- UTIL --- */
 
+/** Generate unique transaction ID */
 function generateId(){
   return Utilities.getUuid();
 }
 
+/** Validate transaction input data */
 function validateTransaksi(p){
   if(!p) throw new Error("Payload kosong");
   if(!p.wallet) throw new Error("Wallet kosong");
@@ -34,14 +36,15 @@ function validateTransaksi(p){
   if(!nominal || nominal <= 0) throw new Error("Nominal tidak valid");
 
   if(p.tipe==="Transfer"){
-  if(!p.walletTujuan) throw new Error("Wallet tujuan wajib");
-  if(p.wallet===p.walletTujuan)
-    throw new Error("Wallet sumber dan tujuan tidak boleh sama");
-    }
+    if(!p.walletTujuan) throw new Error("Wallet tujuan wajib");
+    if(p.wallet===p.walletTujuan)
+      throw new Error("Wallet sumber dan tujuan tidak boleh sama");
   }
+}
 
 /** --- WALLET --- */
 
+/** Fetch wallet balances with cache support */
 function getWalletBalances(){
   const cached = CACHE.get(WALLET_CACHE_KEY);
   if(cached) return JSON.parse(cached);
@@ -56,6 +59,7 @@ function getWalletBalances(){
   return res;
 }
 
+/** Update specific wallet balance */
 function updateBalance(name, amt){
   const lastRow = SH_WAL.getLastRow();
   if(lastRow <= 1) return;
@@ -71,12 +75,12 @@ function updateBalance(name, amt){
     }
   }
 
-  // throw error if wallet not found (prevents silent failure)
   throw new Error("Wallet not found: " + name);
 }
 
 /** --- TRANSACTION SAVE --- */
 
+/** Save new or update existing transaction */
 function simpanTransaksi(p){
   validateTransaksi(p);
 
@@ -85,16 +89,13 @@ function simpanTransaksi(p){
   const kategoriFinal = (p.kategori === 'Lainnya' && p.kategoriKustom)
     ? p.kategoriKustom
     : p.kategori;
-
   const trxId = p.trxId || generateId();
 
-  // Edit mode update
   if(p.rowId){
-  updateExistingTransaction(p);
-  return true;
+    updateExistingTransaction(p);
+    return true;
   }
 
-  // Create new
   if(p.tipe==="Transfer"){
     SH_TRX.appendRow([tgl,'Transfer Out','Sistem',p.wallet,nominal,`Ke: ${p.walletTujuan} | ${p.catatan}`,trxId]);
     SH_TRX.appendRow([tgl,'Transfer In','Sistem',p.walletTujuan,nominal,`Dari: ${p.wallet} | ${p.catatan}`,trxId]);
@@ -108,15 +109,14 @@ function simpanTransaksi(p){
   return true;
 }
 
+/** Handle existing data update logic */
 function updateExistingTransaction(p){
   const row = Number(p.rowId);
   if(row<=1) throw new Error("Row invalid");
 
-  // Get old transaction data
   const old = SH_TRX.getRange(row,1,1,7).getValues()[0];
   const trxId = old[6];
 
-  // If transaction has trxId → remove all related rows
   if(trxId){
     deleteByTransactionId(trxId);
   }else{
@@ -124,8 +124,6 @@ function updateExistingTransaction(p){
     SH_TRX.deleteRow(row);
   }
 
-  // Recreate transaction using new data
-  // Preserve old category and trxId if frontend does not send it
   simpanTransaksi({
     ...p,
     kategori: p.kategori || old[2],
@@ -134,6 +132,7 @@ function updateExistingTransaction(p){
   });
 }
 
+/** Revert wallet balance state */
 function revertBalance(row){
   const tipe=row[1], wallet=row[3], nominal=Number(row[4]);
 
@@ -143,6 +142,7 @@ function revertBalance(row){
 
 /** --- DELETE --- */
 
+/** Delete transaction by row index */
 function hapusTransaksi(rowId){
   const row = Number(rowId);
   if(row<=1) return false;
@@ -159,6 +159,7 @@ function hapusTransaksi(rowId){
   return true;
 }
 
+/** Delete all related transactions by ID */
 function deleteByTransactionId(trxId){
   const values = SH_TRX.getDataRange().getValues();
 
@@ -172,6 +173,7 @@ function deleteByTransactionId(trxId){
 
 /** --- GET TRANSACTIONS --- */
 
+/** Fetch filtered transaction history list */
 function getTransactions(f){
   const lastRow=SH_TRX.getLastRow();
   if(lastRow<=1) return [];
@@ -189,13 +191,12 @@ function getTransactions(f){
     if(!r[0]) continue;
 
     const d=new Date(r[0]);
-
     const matchTipe=
       f.tipe==='Semua'||
       r[1]===f.tipe||
       (f.tipe==='Pemasukan'&&r[1]==='Transfer In')||
       (f.tipe==='Pengeluaran'&&r[1]==='Transfer Out');
-
+      
     if(d>=start&&d<=end&&matchTipe){
       result.push({
         tgl:Utilities.formatDate(r[0],TZ,"dd/MM"),
@@ -216,10 +217,10 @@ function getTransactions(f){
 
 /** --- DASHBOARD --- */
 
+/** Fetch dashboard statistical data */
 function getDashboardData(f){
   const trx=SH_TRX.getDataRange().getValues().slice(1);
   const wal=SH_WAL.getDataRange().getValues().slice(1);
-
   const start=new Date(f.start);
   const end=new Date(f.end);
   end.setHours(23,59,59);
@@ -229,7 +230,6 @@ function getDashboardData(f){
     totalSemua+=Number(r[1]);
     return {name:r[0],balance:Number(r[1])};
   });
-
   let catStats={},totalFiltered=0;
 
   trx.forEach(r=>{
@@ -240,17 +240,16 @@ function getDashboardData(f){
       totalFiltered+=nom;
     }
   });
-
   return {totalSemua,walletDetails,catStats,totalFiltered};
 }
 
 /** --- EXPORT --- */
 
+/** Prepare transaction data for CSV export */
 function getExportData(params){
-  // Support both array and object payload
   const startStr = Array.isArray(params) ? params[0] : params.start;
   const endStr   = Array.isArray(params) ? params[1] : params.end;
-
+  
   if(!startStr || !endStr) throw new Error("Invalid export date range");
 
   const start = new Date(startStr);
@@ -262,9 +261,8 @@ function getExportData(params){
   }
 
   const data = SH_TRX.getDataRange().getValues();
-  data.shift(); // remove header
+  data.shift();
 
-  // Sort by transaction date ascending
   data.sort((a,b)=>new Date(a[0]) - new Date(b[0]));
 
   let runningTotal = 0;
@@ -281,7 +279,6 @@ function getExportData(params){
     const nominal = Number(r[4]) || 0;
     const isDebit = (r[1]==='Pemasukan' || r[1]==='Transfer In');
 
-    // Always update running total for correct cumulative balance
     runningTotal += isDebit ? nominal : -nominal;
 
     if(tglTrx >= start && tglTrx <= end){
