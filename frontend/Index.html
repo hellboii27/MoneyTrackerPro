@@ -34,7 +34,7 @@
     .form-control, .form-select { border-radius: 16px; border: 1.5px solid #f1f5f9; padding: 14px; font-size: 0.95rem; background: #f8fafc; font-weight: 600; }
     .btn-main { background: var(--primary); color: #fff; border-radius: 18px; padding: 18px; font-weight: 800; width: 100%; border: none; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2); }
     
-    /* FIX UI Slide */
+    /* FIX UI Slide  */
     .trx-item-wrapper { position: relative; overflow: hidden; border-radius: 20px; margin-bottom: 12px; touch-action: pan-y; background: transparent; }
     .slide-action { position: absolute; top: 0; bottom: 0; width: 100px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; color: white; z-index: 1; opacity: 0; visibility: hidden; transition: opacity 0.2s; }
     .action-edit { left: 0; background: var(--accent); border-radius: 20px 0 0 20px; }
@@ -158,6 +158,10 @@
         <input type="date" class="form-control py-1 px-2" id="h-end" style="width:130px; font-size:0.75rem;">
         <button class="btn btn-dark btn-sm rounded-3" onclick="applyCustomDate('H')">OK</button>
       </div>
+
+      <div class="mb-3 px-1">
+        <input type="text" class="form-control" id="searchInput" placeholder="🔍 Cari kategori, catatan, nominal..." oninput="handleSearch(this.value)" style="border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
+      </div>
       <div id="transaction-list"></div>
       <div class="pagination-container d-flex justify-content-center align-items-center gap-3 mt-4" id="pagination-ctrl" style="display:none;">
         <button class="btn btn-sm btn-light fw-800 px-3 rounded-pill shadow-sm" onclick="changePage(-1)" id="btn-prev">←</button>
@@ -260,6 +264,9 @@
   let hF = { tipe: 'Semua', start: '', end: '' }, sF = { tipe: 'Pengeluaran', start: '', end: '' }, chartObj = null;
   let allTrx = [], curPage = 1, walBalArr = []; const rows = 10;
   let startX = 0, currentX = 0, isDragging = false, deleteIdxTemp = null;
+  
+  /** Search query state for transaction list */
+  let searchQuery = ""; 
 
   const CAT_MAP = { 
     "Makan & Minum": { c: "#f59e0b", i: "🍴" }, "Transportasi": { c: "#10b981", i: "🚗" }, 
@@ -313,7 +320,7 @@
   function resetSlide() { if (deleteIdxTemp !== null) { const card = document.getElementById(`card-${deleteIdxTemp}`); if(card){ card.style.transform = 'translateX(0)'; setTimeout(() => { const wrapper = card.parentElement; wrapper.querySelectorAll('.slide-action').forEach(el => { el.style.opacity = '0'; el.style.visibility = 'hidden'; }); }, 200); } deleteIdxTemp = null; } }
 
   /** Fetches transaction history from server */
-  function fetchTransactions() { runServer("getTransactions", hF, data=>{ allTrx=data; curPage=1; renderTrx();}); }
+  function fetchTransactions() { runServer("getTransactions", hF, data=>{ allTrx=data; curPage=1; document.getElementById('searchInput').value = ''; searchQuery = ''; renderTrx();}); }
   
   /** Fetches and renders dashboard statistical data */
   function fetchDashboard() { runServer("getDashboardData", sF, data=>{ document.getElementById('total-semua-saldo').innerText = "Rp " + data.totalSemua.toLocaleString('id-ID'); document.getElementById('wallet-list').innerHTML = data.walletDetails.map(w => `<div class="d-flex justify-content-between py-2 small fw-bold border-bottom"><span>${escapeHtml(w.name)}</span><span>Rp ${w.balance.toLocaleString('id-ID')}</span></div>`).join(''); const sortK = Object.keys(data.catStats).sort((a, b) => data.catStats[b] - data.catStats[a]); const val = sortK.map(l => data.catStats[l]), col = sortK.map(l => getDynamicColor(l)), tot = data.totalFiltered; if (chartObj) chartObj.destroy(); chartObj = new Chart(document.getElementById('myChart'), { type: 'doughnut', data: { labels: sortK, datasets: [{ data: val, backgroundColor: col, borderWidth: 0 }] }, options: { cutout: '82%', plugins: { legend: { display: false } }, maintainAspectRatio: false }, plugins: [{ beforeDraw: (c) => { const { ctx, width, height } = c; ctx.restore(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '800 1.1rem Plus Jakarta Sans'; ctx.fillStyle = '#1e293b'; ctx.fillText('Rp ' + tot.toLocaleString('id-ID'), width / 2, height / 2); ctx.save(); } }] }); document.getElementById('cat-list').innerHTML = sortK.map((l, i) => { const p = tot > 0 ? ((val[i] / tot) * 100).toFixed(0) : 0; return `<div class="cat-item"><div class="cat-icon-box" style="background:${col[i]}15; color:${col[i]}">${getDynamicIcon(l)}</div><div class="flex-grow-1"><div class="d-flex justify-content-between"><span class="small fw-bold">${escapeHtml(l)}</span><span class="small fw-bold">Rp ${val[i].toLocaleString('id-ID')}</span></div><div class="progress-wrap"><div class="progress-bar-fill" style="width:${p}%; background:${col[i]}"></div></div></div><div class="ms-3 fw-800 small" style="color:${col[i]}">${p}%</div></div>`; }).join(''); }); }
@@ -321,23 +328,45 @@
   /** Fetches all wallet balance states */
   function loadWallets(){runServer("getWalletBalances",null,res=>{walBalArr=res;const opts=res.map(w=>{const safe=escapeHtml(w.name);return `<option value="${safe}">${safe}</option>`}).join('');document.getElementById('wallet').innerHTML=opts;document.getElementById('walletTujuan').innerHTML=opts;updateSaldoDisplay();});}
 
-  /** Renders transaction list with pagination */
+  /** Handles search input and updates transaction list accordingly */
+  function handleSearch(val) {
+    searchQuery = val.toLowerCase();
+    curPage = 1;
+    renderTrx();
+  }
+
+  /** Renders transaction list with pagination and search filter */
   function renderTrx() {
     const list = document.getElementById('transaction-list'), pag = document.getElementById('pagination-ctrl');
-    if (!allTrx.length) {
+    
+    // Attach original indices to transactions for accurate Edit/Delete operations after filtering
+    let dataToRender = allTrx.map((t, index) => ({ ...t, originalIdx: index }));
+
+    if (searchQuery) {
+      dataToRender = dataToRender.filter(t => 
+        t.kat.toLowerCase().includes(searchQuery) || 
+        (t.note && t.note.toLowerCase().includes(searchQuery)) ||
+        t.nominal.toString().includes(searchQuery)
+      );
+    }
+
+    if (!dataToRender.length) {
       list.innerHTML = '<p class="text-center py-5 small opacity-50 fw-bold">Belum ada data transaksi</p>';
       pag.style.setProperty('display', 'none', 'important');
       return;
     }
+    
     pag.style.setProperty('display', 'flex', 'important');
-    const totalPages = Math.ceil(allTrx.length / rows);
-    const slice = allTrx.slice((curPage - 1) * rows, curPage * rows);
-    list.innerHTML = slice.map((t, i) => {
-      const realIdx = ((curPage - 1) * rows) + i;
+    const totalPages = Math.ceil(dataToRender.length / rows);
+    const slice = dataToRender.slice((curPage - 1) * rows, curPage * rows);
+    
+    list.innerHTML = slice.map((t) => {
+      const realIdx = t.originalIdx; // Use original index for Edit/Delete actions
       const isInc = t.tipe.includes('In') || t.tipe === 'Pemasukan';
       const col = getDynamicColor(t.kat);
       return `<div class="trx-item-wrapper"><div class="slide-action action-edit" onclick="handleEdit(${realIdx})">EDIT</div><div class="slide-action action-delete" onclick="handleDelete(${realIdx})">HAPUS</div><div class="trx-card-old" id="card-${realIdx}" style="border-left-color: ${col}" ontouchstart="ts(event, ${realIdx})" ontouchmove="tm(event, ${realIdx})" ontouchend="te(event, ${realIdx})"><div class="cat-icon-box" style="background:${col}15; color:${col}">${getDynamicIcon(t.kat)}</div><div class="flex-grow-1"><div class="small fw-bold">${escapeHtml(t.kat)}</div><div class="text-muted" style="font-size:0.7rem; line-height:1.2; margin-bottom:2px;">${escapeHtml(t.note || '-')}</div><div class="text-muted" style="font-size:0.6rem; opacity:0.8;">${t.tgl} • ${escapeHtml(t.wallet)}</div></div><div class="fw-800 ${isInc ? 'text-success' : 'text-danger'} text-nowrap ms-2" style="font-size:0.9rem">${isInc ? '+' : '-'} Rp ${(t.nominal||0).toLocaleString('id-ID')}</div></div></div>`;
     }).join('');
+    
     document.getElementById('pageDisplay').innerText = `${curPage} / ${totalPages}`;
     document.getElementById('btn-prev').disabled = (curPage === 1);
     document.getElementById('btn-next').disabled = (curPage === totalPages);
