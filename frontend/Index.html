@@ -10,47 +10,56 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   
   <style>
-    /* Global Styles & Variables */
+    /* [CONFIG] Global design tokens and colors */
     :root { --primary: #0f172a; --accent: #2563eb; --bg: #f8fafc; --text-main: #1e293b; --text-muted: #64748b; --success-emerald: #10b981; }
     body { background: var(--bg); font-family: 'Plus Jakarta Sans', sans-serif; color: var(--text-main); padding-bottom: 30px; overflow-x: hidden; }
     
-    /* Layout Components */
+    /* [UI] Application header styles */
     .header-app { padding: 30px 0 20px; text-align: center; }
     .header-app h1 { font-weight: 800; font-size: 1.4rem; color: var(--primary); letter-spacing: -0.5px; }
     .header-app h1 span { color: var(--accent); }
+
+    /* [UI] Tab navigation and pills styling */
     .nav-custom { background: #fff; border-radius: 20px; padding: 6px; margin-bottom: 25px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
     .nav-custom .nav-link { border-radius: 15px; color: var(--text-muted); font-weight: 700; font-size: 0.85rem; border: none; padding: 12px; transition: 0.3s; }
     .nav-custom .nav-link.active { background: var(--primary) !important; color: #fff !important; box-shadow: 0 8px 16px rgba(15, 23, 42, 0.15); }
     
-    /* Card Components */
+    /* [UI] Visual containers and cards */
     .glass-card { background: #fff; border-radius: 28px; padding: 25px; margin-bottom: 18px; border: 1px solid rgba(0,0,0,0.02); box-shadow: 0 10px 30px -5px rgba(0,0,0,0.05); }
     .balance-card { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; border-radius: 28px; padding: 30px; margin-bottom: 20px; text-align: center; box-shadow: 0 15px 35px -10px rgba(15, 23, 42, 0.3); }
     .balance-card h2 { font-weight: 800; font-size: 1.8rem; margin-top: 8px; }
     
-    /* Form & Input Elements */
+    /* [UI] Form fields and input aesthetics */
     .wallet-wrapper { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .balance-info { color: var(--success-emerald); font-size: 0.75rem; font-weight: 800; background: rgba(16, 185, 129, 0.1); padding: 4px 12px; border-radius: 10px; }
     .form-label-custom { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; display: block; }
     .form-control, .form-select { border-radius: 16px; border: 1.5px solid #f1f5f9; padding: 14px; font-size: 0.95rem; background: #f8fafc; font-weight: 600; }
     .btn-main { background: var(--primary); color: #fff; border-radius: 18px; padding: 18px; font-weight: 800; width: 100%; border: none; box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2); }
     
-    /* FIX UI Slide  */
+    /* [UX] Swipe action gesture animations */
     .trx-item-wrapper { position: relative; overflow: hidden; border-radius: 20px; margin-bottom: 12px; touch-action: pan-y; background: transparent; }
     .slide-action { position: absolute; top: 0; bottom: 0; width: 100px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; color: white; z-index: 1; opacity: 0; visibility: hidden; transition: opacity 0.2s; }
     .action-edit { left: 0; background: var(--accent); border-radius: 20px 0 0 20px; }
     .action-delete { right: 0; background: #ef4444; border-radius: 0 20px 20px 0; }
     .trx-card-old { position: relative; z-index: 2; display: flex; align-items: center; background: #fff; border-radius: 20px; padding: 18px; margin-bottom: 0 !important; border-left: 6px solid; transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1); }
     
+    /* [UI] Icons and progress bar feedback */
     .cat-icon-box { width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 1.2rem; }
     .cat-item { display: flex; align-items: center; padding: 15px 0; border-bottom: 1px solid #f1f5f9; }
     .progress-wrap { height: 7px; background: #f1f5f9; border-radius: 10px; overflow: hidden; margin-top: 8px; }
     .progress-bar-fill { height: 100%; border-radius: 10px; }
+    
+    /* [UI] Filter button presets */
     .filter-pills { display: flex; gap: 10px; padding: 5px 0 20px; justify-content: center; overflow-x: auto; scrollbar-width: none; }
     .btn-pill { border-radius: 14px; border: 1px solid #e2e8f0; background: #fff; font-size: 0.75rem; font-weight: 700; padding: 10px 18px; color: var(--text-muted); transition: 0.2s; }
     .btn-pill.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    
+    /* [UI] Toggle switch for chart statistics */
     .toggle-stats { background: #fff; border-radius: 16px; padding: 5px; display: flex; margin-bottom: 20px; border: 1px solid #e2e8f0; }
     .toggle-stats button { flex: 1; border: none; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 0.8rem; background: transparent; color: var(--text-muted); transition: 0.3s; }
     .toggle-stats button.active { background: var(--primary); color: #fff; box-shadow: 0 5px 15px rgba(15, 23, 42, 0.2); }
+    
+    /* [UI] Loading and toast notifications */
     #loader { position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 9999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
     .footer-app { padding: 25px 0; text-align: center; }
     .footer-app p { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); opacity: 0.7; }
@@ -58,24 +67,13 @@
     .toast { width: max-content !important; margin: 0 auto !important; border-radius: 16px !important; background: #0f172a !important; color: #fff !important; border: none !important; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .toast-body { padding: 12px 20px !important; font-size: 0.85rem; }
 
-    /* Fix 1-Click Date Picker */
+    /* [UX] Date picker usability fix */
     .date-input-container { position: relative; width: 100%; }
     input[type="date"].form-control { color: transparent; position: relative; }
     input[type="date"].form-control:focus, 
     input[type="date"].form-control:valid { color: var(--text-main); }
-    
-    input[type="date"].form-control::before {
-      content: attr(placeholder);
-      position: absolute;
-      left: 14px;
-      color: var(--text-muted);
-      pointer-events: none;
-      }
-      input[type="date"].form-control:focus::before,
-      input[type="date"].form-control:valid::before {
-        display: none !important;
-        }
-    
+    input[type="date"].form-control::before { content: attr(placeholder); position: absolute; left: 14px; color: var(--text-muted); pointer-events: none; }
+    input[type="date"].form-control:focus::before, input[type="date"].form-control:valid::before { display: none !important; }
   </style>
 </head>
 <body>
@@ -158,7 +156,6 @@
         <input type="date" class="form-control py-1 px-2" id="h-end" style="width:130px; font-size:0.75rem;">
         <button class="btn btn-dark btn-sm rounded-3" onclick="applyCustomDate('H')">OK</button>
       </div>
-
       <div class="mb-3 px-1">
         <input type="text" class="form-control" id="searchInput" placeholder="🔍 Cari kategori, catatan, nominal..." oninput="handleSearch(this.value)" style="border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);">
       </div>
@@ -195,41 +192,32 @@
       </div>
     </div>
 
-<div class="tab-pane fade" id="tab-ex" role="tabpanel">
-  <div class="glass-card">
-    <label class="form-label-custom">Periode Transaksi</label>
-    
-    <div class="d-flex gap-2 mb-3">
-      <div class="date-input-container">
-        <input type="date" class="form-control" id="ex-start" placeholder="Tanggal Mulai" required>
-      </div>
-      <div class="date-input-container">
-        <input type="date" class="form-control" id="ex-end" placeholder="Tanggal Akhir" required>
+    <div class="tab-pane fade" id="tab-ex" role="tabpanel">
+      <div class="glass-card">
+        <label class="form-label-custom">Periode Transaksi</label>
+        <div class="d-flex gap-2 mb-3">
+          <div class="date-input-container"><input type="date" class="form-control" id="ex-start" placeholder="Tanggal Mulai" required></div>
+          <div class="date-input-container"><input type="date" class="form-control" id="ex-end" placeholder="Tanggal Akhir" required></div>
+        </div>
+        <button class="btn-main mb-3" onclick="processExport()">GENERATE PREVIEW</button>
+        <div id="export-preview-area" style="display:none;">
+          <div class="table-responsive">
+            <table class="table table-bordered table-sm small fw-bold" id="table-export" style="font-size: 0.7rem;">
+              <thead class="table-dark"><tr><th>Kode PP</th><th>Tanggal</th><th>Dompet</th><th>Keterangan</th><th>Catatan</th><th>Debit</th><th>Kredit</th><th>Total</th></tr></thead>
+              <tbody id="export-body"></tbody>
+            </table>
+          </div>
+          <button class="btn btn-success w-100 fw-800 rounded-pill mt-3 py-3" onclick="downloadCSV()">DOWNLOAD CSV</button>
+        </div>
       </div>
     </div>
 
-    <button class="btn-main mb-3" onclick="processExport()">GENERATE PREVIEW</button>
-
-    <div id="export-preview-area" style="display:none;">
-      <div class="table-responsive">
-        <table class="table table-bordered table-sm small fw-bold" id="table-export" style="font-size: 0.7rem;">
-          <thead class="table-dark">
-            <tr><th>Kode PP</th><th>Tanggal</th><th>Dompet</th><th>Keterangan</th><th>Catatan</th><th>Debit</th><th>Kredit</th><th>Total</th></tr>
-          </thead>
-          <tbody id="export-body"></tbody>
-        </table>
-      </div>
-      <button class="btn btn-success w-100 fw-800 rounded-pill mt-3 py-3" onclick="downloadCSV()">DOWNLOAD CSV</button>
-    </div>
+    <div class="footer-app"><p>&copy; 2026 Bayu Wicaksono | v4.3.1 | All Rights Reserved.</p></div>
   </div>
 </div>
 
-  <div class="footer-app"><p>&copy; 2026 Bayu Wicaksono | v4.3.1 | All Rights Reserved.</p></div>
-</div>
-
 <script>
-
-  /** Global bridge to server-side functions */
+  // [API] Global bridge ke fungsi backend Apps Script
   function runServer(method, payload, success){
   loading(true);
   const runner = google.script.run
@@ -241,33 +229,23 @@
       loading(false);
       alert(err.message || "Terjadi error server");
     });
-  if(payload === undefined || payload === null){
-    runner[method]();
-  }else{
-    runner[method](payload);
-  }
+  if(payload === undefined || payload === null) runner[method]();
+  else runner[method](payload);
   }
 
-  /** Escapes HTML characters for security */
+  // [SECURITY] Sanitasi karakter HTML untuk mencegah XSS
   function escapeHtml(str){
     if(!str) return "";
-    return str.replace(/[&<>"']/g,m=>({
-      '&':'&amp;',
-      '<':'&lt;',
-      '>':'&gt;',
-      '"':'&quot;',
-      "'":'&#039;'
-    })[m]);
+    return str.replace(/[&<>"']/g,m=>({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;' })[m]);
   }
 
-  /** Global state and configuration */
+  // [STATE] Global state management aplikasi
   let hF = { tipe: 'Semua', start: '', end: '' }, sF = { tipe: 'Pengeluaran', start: '', end: '' }, chartObj = null;
   let allTrx = [], curPage = 1, walBalArr = []; const rows = 10;
   let startX = 0, currentX = 0, isDragging = false, deleteIdxTemp = null;
-  
-  /** Search query state for transaction list */
   let searchQuery = ""; 
 
+  // [CONFIG] Map kategori, warna, dan icon
   const CAT_MAP = { 
     "Makan & Minum": { c: "#f59e0b", i: "🍴" }, "Transportasi": { c: "#10b981", i: "🚗" }, 
     "Belanja": { c: "#ec4899", i: "🛍️" }, "Tempat Tinggal": { c: "#3b82f6", i: "🏠" }, 
@@ -280,135 +258,112 @@
     "Hadiah": { c: "#d97706", i: "🎁" }, "Lainnya": { c: "#475569", i: "📦" } 
   };
 
-  /** Returns hex color for a category string */
-  function getDynamicColor(str) { if (CAT_MAP[str]) return CAT_MAP[str].c; let hash = 0; for (let i = 0; i < str.length; i++) { hash = str.charCodeAt(i) + ((hash << 5) - hash); } let color = '#'; for (let i = 0; i < 3; i++) { let value = (hash >> (i * 8)) & 0xFF; value = Math.floor((value + 150) / 2); color += ('00' + value.toString(16)).substr(-2); } return color; }
+  // [UTIL] Ambil warna hex berdasarkan string kategori
+  function getDynamicColor(str) { if (CAT_MAP[str]) return CAT_MAP[str].c; let hash = 0; for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash); let color = '#'; for (let i = 0; i < 3; i++) { let value = (hash >> (i * 8)) & 0xFF; value = Math.floor((value + 150) / 2); color += ('00' + value.toString(16)).substr(-2); } return color; }
   
-  /** Returns icon for a category string */
+  // [UTIL] Ambil icon berdasarkan string kategori
   function getDynamicIcon(str) { return CAT_MAP[str]?.i || '🏷️'; }
   
-  /** Toggles global loading overlay */
+  // [UI] Toggle overlay loading screen
   function loading(s) { document.getElementById('loader').style.display = s ? 'flex' : 'none'; }
   
-  /** Formats input value into Indonesian Rupiah */
+  // [UTIL] Format input angka menjadi format Rupiah
   function formatRp(e) { let v = e.value.replace(/\D/g, ""); e.value = v ? "Rp " + new Intl.NumberFormat('id-ID').format(v) : ""; }
   
-  /** Shows success toast notification */
+  // [UI] Tampilkan toast sukses melayang
   function showToast() { const toastEl = document.getElementById('toastSuccess'); const toast = new bootstrap.Toast(toastEl, { delay: 3000 }); toast.show(); }
   
-  /** Updates individual wallet balance display */
+  // [UI] Update tampilan saldo dompet terpilih di form
   function updateSaldoDisplay() { const sel = document.getElementById('wallet').value; const found = walBalArr.find(w => w.name === sel); document.getElementById('display-saldo').innerText = `Saldo - Rp ${new Intl.NumberFormat('id-ID').format(found ? found.balance : 0)}`; }
 
-  /** Handles swipe start event */
+  // [UX] Gesture: Inisialisasi swipe pada baris transaksi
   function ts(e, i) { startX = e.touches[0].clientX; isDragging = true; const wrapper = document.getElementById(`card-${i}`).parentElement; wrapper.querySelectorAll('.slide-action').forEach(el => { el.style.visibility = 'visible'; el.style.opacity = '1'; }); }
   
-  /** Handles swipe movement event */
+  // [UX] Gesture: Handle pergeseran swipe saat jari bergerak
   function tm(e, i) { if (!isDragging) return; currentX = e.touches[0].clientX - startX; const card = document.getElementById(`card-${i}`); if (currentX > 0) card.style.transform = `translateX(${Math.min(currentX, 100)}px)`; else card.style.transform = `translateX(${Math.max(currentX, -100)}px)`; }
   
-  /** Handles swipe end event */
+  // [UX] Gesture: Finalisasi posisi swipe saat jari diangkat
   function te(e, i) { isDragging = false; const card = document.getElementById(`card-${i}`); if (currentX > 60) card.style.transform = `translateX(100px)`; else if (currentX < -60) card.style.transform = `translateX(-100px)`; else { card.style.transform = `translateX(0)`; setTimeout(() => { const wrapper = card.parentElement; wrapper.querySelectorAll('.slide-action').forEach(el => { el.style.opacity = '0'; el.style.visibility = 'hidden'; }); }, 200); } currentX = 0; }
 
-  /** Populates form with existing transaction data */
+  // [UI] Muat data transaksi lama ke dalam form edit
   function handleEdit(idx) { const t = allTrx[idx]; document.getElementById('tipe').value = t.tipe.includes('Transfer') ? 'Transfer' : t.tipe; toggleUI(); const kategoriSelect = document.getElementById('kategori'); const options = Array.from(kategoriSelect.options).map(opt => opt.value); if (options.includes(t.kat)) { kategoriSelect.value = t.kat; document.getElementById('kat-kustom-area').style.display = 'none'; } else { kategoriSelect.value = 'Lainnya'; document.getElementById('kategoriKustom').value = t.kat; document.getElementById('kat-kustom-area').style.display = 'block'; } document.getElementById('wallet').value = t.wallet; document.getElementById('catatan').value = t.note; document.getElementById('jumlah').value = "Rp " + t.nominal.toLocaleString('id-ID'); document.getElementById('tglInput').value = t.tglRaw; document.getElementById('editRowId').value = t.row; document.getElementById('editRowId').dataset.trxid = t.trxId || ""; document.getElementById('btn-submit').innerText = "UPDATE TRANSAKSI"; document.getElementById('tab-in-btn').click(); document.getElementById(`card-${idx}`).style.transform = 'translateX(0)'; }
   
-  /** Prepares transaction deletion */
+  // [UX] Buka modal konfirmasi hapus transaksi
   function handleDelete(idx) { deleteIdxTemp = idx; const modal = new bootstrap.Modal(document.getElementById('modalConfirm')); modal.show(); }
   
-  /** Finalizes transaction deletion on server */
+  // [API] Eksekusi penghapusan transaksi ke server
   function executeDelete() { if (deleteIdxTemp === null) return; const t = allTrx[deleteIdxTemp]; const modal = bootstrap.Modal.getInstance(document.getElementById('modalConfirm')); modal.hide(); runServer("hapusTransaksi", t.row, ()=>{ fetchTransactions(); loadWallets(); deleteIdxTemp = null; showToast(); }); }
   
-  /** Resets swipe position if cancelled */
+  // [UX] Kembalikan posisi baris jika aksi dibatalkan
   function resetSlide() { if (deleteIdxTemp !== null) { const card = document.getElementById(`card-${deleteIdxTemp}`); if(card){ card.style.transform = 'translateX(0)'; setTimeout(() => { const wrapper = card.parentElement; wrapper.querySelectorAll('.slide-action').forEach(el => { el.style.opacity = '0'; el.style.visibility = 'hidden'; }); }, 200); } deleteIdxTemp = null; } }
 
-  /** Fetches transaction history from server */
+  // [API] Ambil riwayat transaksi terbaru dari server
   function fetchTransactions() { runServer("getTransactions", hF, data=>{ allTrx=data; curPage=1; document.getElementById('searchInput').value = ''; searchQuery = ''; renderTrx();}); }
   
-  /** Fetches and renders dashboard statistical data */
+  // [UI] Render dashboard statistik dan chart donat
   function fetchDashboard() { runServer("getDashboardData", sF, data=>{ document.getElementById('total-semua-saldo').innerText = "Rp " + data.totalSemua.toLocaleString('id-ID'); document.getElementById('wallet-list').innerHTML = data.walletDetails.map(w => `<div class="d-flex justify-content-between py-2 small fw-bold border-bottom"><span>${escapeHtml(w.name)}</span><span>Rp ${w.balance.toLocaleString('id-ID')}</span></div>`).join(''); const sortK = Object.keys(data.catStats).sort((a, b) => data.catStats[b] - data.catStats[a]); const val = sortK.map(l => data.catStats[l]), col = sortK.map(l => getDynamicColor(l)), tot = data.totalFiltered; if (chartObj) chartObj.destroy(); chartObj = new Chart(document.getElementById('myChart'), { type: 'doughnut', data: { labels: sortK, datasets: [{ data: val, backgroundColor: col, borderWidth: 0 }] }, options: { cutout: '82%', plugins: { legend: { display: false } }, maintainAspectRatio: false }, plugins: [{ beforeDraw: (c) => { const { ctx, width, height } = c; ctx.restore(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '800 1.1rem Plus Jakarta Sans'; ctx.fillStyle = '#1e293b'; ctx.fillText('Rp ' + tot.toLocaleString('id-ID'), width / 2, height / 2); ctx.save(); } }] }); document.getElementById('cat-list').innerHTML = sortK.map((l, i) => { const p = tot > 0 ? ((val[i] / tot) * 100).toFixed(0) : 0; return `<div class="cat-item"><div class="cat-icon-box" style="background:${col[i]}15; color:${col[i]}">${getDynamicIcon(l)}</div><div class="flex-grow-1"><div class="d-flex justify-content-between"><span class="small fw-bold">${escapeHtml(l)}</span><span class="small fw-bold">Rp ${val[i].toLocaleString('id-ID')}</span></div><div class="progress-wrap"><div class="progress-bar-fill" style="width:${p}%; background:${col[i]}"></div></div></div><div class="ms-3 fw-800 small" style="color:${col[i]}">${p}%</div></div>`; }).join(''); }); }
   
-  /** Fetches all wallet balance states */
+  // [API] Ambil daftar dompet dan saldo untuk dropdown
   function loadWallets(){runServer("getWalletBalances",null,res=>{walBalArr=res;const opts=res.map(w=>{const safe=escapeHtml(w.name);return `<option value="${safe}">${safe}</option>`}).join('');document.getElementById('wallet').innerHTML=opts;document.getElementById('walletTujuan').innerHTML=opts;updateSaldoDisplay();});}
 
-  /** Handles search input and updates transaction list accordingly */
-  function handleSearch(val) {
-    searchQuery = val.toLowerCase();
-    curPage = 1;
-    renderTrx();
-  }
+  // [EVENT] Handle pencarian real-time pada riwayat
+  function handleSearch(val) { searchQuery = val.toLowerCase(); curPage = 1; renderTrx(); }
 
-  /** Renders transaction list with pagination and search filter */
+  // [UI] Render daftar transaksi dengan pagination dan filter search
   function renderTrx() {
     const list = document.getElementById('transaction-list'), pag = document.getElementById('pagination-ctrl');
-    
-    // Attach original indices to transactions for accurate Edit/Delete operations after filtering
     let dataToRender = allTrx.map((t, index) => ({ ...t, originalIdx: index }));
-
-    if (searchQuery) {
-      dataToRender = dataToRender.filter(t => 
-        t.kat.toLowerCase().includes(searchQuery) || 
-        (t.note && t.note.toLowerCase().includes(searchQuery)) ||
-        t.nominal.toString().includes(searchQuery)
-      );
-    }
-
-    if (!dataToRender.length) {
-      list.innerHTML = '<p class="text-center py-5 small opacity-50 fw-bold">Belum ada data transaksi</p>';
-      pag.style.setProperty('display', 'none', 'important');
-      return;
-    }
-    
+    if (searchQuery) dataToRender = dataToRender.filter(t => t.kat.toLowerCase().includes(searchQuery) || (t.note && t.note.toLowerCase().includes(searchQuery)) || t.nominal.toString().includes(searchQuery));
+    if (!dataToRender.length) { list.innerHTML = '<p class="text-center py-5 small opacity-50 fw-bold">Belum ada data transaksi</p>'; pag.style.setProperty('display', 'none', 'important'); return; }
     pag.style.setProperty('display', 'flex', 'important');
     const totalPages = Math.ceil(dataToRender.length / rows);
     const slice = dataToRender.slice((curPage - 1) * rows, curPage * rows);
-    
     list.innerHTML = slice.map((t) => {
-      const realIdx = t.originalIdx; // Use original index for Edit/Delete actions
-      const isInc = t.tipe.includes('In') || t.tipe === 'Pemasukan';
-      const col = getDynamicColor(t.kat);
+      const realIdx = t.originalIdx; const isInc = t.tipe.includes('In') || t.tipe === 'Pemasukan'; const col = getDynamicColor(t.kat);
       return `<div class="trx-item-wrapper"><div class="slide-action action-edit" onclick="handleEdit(${realIdx})">EDIT</div><div class="slide-action action-delete" onclick="handleDelete(${realIdx})">HAPUS</div><div class="trx-card-old" id="card-${realIdx}" style="border-left-color: ${col}" ontouchstart="ts(event, ${realIdx})" ontouchmove="tm(event, ${realIdx})" ontouchend="te(event, ${realIdx})"><div class="cat-icon-box" style="background:${col}15; color:${col}">${getDynamicIcon(t.kat)}</div><div class="flex-grow-1"><div class="small fw-bold">${escapeHtml(t.kat)}</div><div class="text-muted" style="font-size:0.7rem; line-height:1.2; margin-bottom:2px;">${escapeHtml(t.note || '-')}</div><div class="text-muted" style="font-size:0.6rem; opacity:0.8;">${t.tgl} • ${escapeHtml(t.wallet)}</div></div><div class="fw-800 ${isInc ? 'text-success' : 'text-danger'} text-nowrap ms-2" style="font-size:0.9rem">${isInc ? '+' : '-'} Rp ${(t.nominal||0).toLocaleString('id-ID')}</div></div></div>`;
     }).join('');
-    
     document.getElementById('pageDisplay').innerText = `${curPage} / ${totalPages}`;
     document.getElementById('btn-prev').disabled = (curPage === 1);
     document.getElementById('btn-next').disabled = (curPage === totalPages);
   }
 
-  /** Validates and sends transaction data to server */
+  // [EVENT] Handle submit form transaksi (Simpan/Update)
   function handleSave(e) { e.preventDefault(); if (document.getElementById('kategori').value === 'Lainnya' && !document.getElementById('kategoriKustom').value.trim()) { alert("Isi kategori!"); return; } const p = { tipe: document.getElementById('tipe').value, kategori: document.getElementById('kategori').value, kategoriKustom: document.getElementById('kategoriKustom').value, wallet: document.getElementById('wallet').value, walletTujuan: document.getElementById('walletTujuan').value, jumlah: document.getElementById('jumlah').value.replace(/[^0-9]/g, ""), catatan: document.getElementById('catatan').value, tgl: document.getElementById('tglInput').value, rowId: document.getElementById('editRowId').value, trxId: document.getElementById('editRowId').dataset.trxid || "" }; runServer("simpanTransaksi", p, ()=>{ document.getElementById('mainForm').reset(); document.getElementById('editRowId').value = ""; document.getElementById('editRowId').dataset.trxid = ""; document.getElementById('btn-submit').innerText = "SIMPAN TRANSAKSI"; setDefaultDate(); toggleUI(); loadWallets(); fetchTransactions(); showToast(); }); }
   
-  /** Toggles form fields based on transaction type */
+  // [UI] Sesuaikan input kategori berdasarkan tipe transaksi
   function toggleUI() { const t = document.getElementById('tipe').value; document.getElementById('kat-area').style.display = t === 'Transfer' ? 'none' : 'block'; document.getElementById('tujuan-area').style.display = t === 'Transfer' ? 'block' : 'none'; const cats = (t === 'Pemasukan') ? ["Gaji", "Bisnis", "Investasi", "Hadiah", "Fintech", "Lainnya"] : ["Makan & Minum", "Transportasi", "Belanja", "Tempat Tinggal", "Keluarga", "Hiburan", "Fintech", "Kesehatan", "Teman", "Hewan Peliharaan", "Keuangan", "Pribadi", "Sistem", "Lainnya"]; document.getElementById('kategori').innerHTML = cats.map(k => `<option value="${k}">${k}</option>`).join(''); checkLainnya(); }
   
-  /** Toggles custom category input field */
+  // [UI] Tampilkan input teks jika memilih kategori 'Lainnya'
   function checkLainnya() { document.getElementById('kat-kustom-area').style.display = document.getElementById('kategori').value === 'Lainnya' ? 'block' : 'none'; }
   
-  /** Shows or hides custom date picker */
+  // [UI] Toggle visibilitas filter tanggal kustom
   function toggleCustomFilter(type) { const box = document.getElementById(`custom-date-${type}`); const cur = box.style.getPropertyValue('display') === 'flex'; box.style.setProperty('display', cur ? 'none' : 'flex', 'important'); [7, 30, 365].forEach(v => { const el = document.getElementById(`${type.toLowerCase()}-d-${v}`); if(el) el.classList.remove('active'); }); document.getElementById(`${type.toLowerCase()}-d-custom`).classList.add('active'); }
   
-  /** Applies custom date range for filtering */
+  // [EVENT] Terapkan filter rentang tanggal kustom
   function applyCustomDate(type) { const s = document.getElementById(`${type.toLowerCase()}-start`).value, e = document.getElementById(`${type.toLowerCase()}-end`).value; if(!s || !e) return; if(type === 'H') { hF.start = s; hF.end = e; fetchTransactions(); } else { sF.start = s; sF.end = e; fetchDashboard(); } }
   
-  /** Updates history filters with preset range */
+  // [EVENT] Update filter riwayat berdasarkan preset hari
   function updateHDate(d) { document.getElementById('custom-date-H').style.setProperty('display', 'none', 'important'); const t = new Date(), p = new Date(t.getTime() - ((d - 1) * 24 * 60 * 60 * 1000)); hF.start = p.toISOString().split('T')[0]; hF.end = t.toISOString().split('T')[0]; [7, 30, 365].forEach(v => { const el = document.getElementById('h-d-' + v); if(el) el.classList.toggle('active', d === v); }); document.getElementById('h-d-custom').classList.remove('active'); fetchTransactions(); }
   
-  /** Updates statistics filters with preset range */
+  // [EVENT] Update filter statistik berdasarkan preset hari
   function updateSDate(d) { document.getElementById('custom-date-S').style.setProperty('display', 'none', 'important'); const t = new Date(), p = new Date(t.getTime() - ((d - 1) * 24 * 60 * 60 * 1000)); sF.start = p.toISOString().split('T')[0]; sF.end = t.toISOString().split('T')[0]; [7, 30, 365].forEach(v => { const el = document.getElementById('s-d-' + v); if(el) el.classList.toggle('active', d === v); }); document.getElementById('s-d-custom').classList.remove('active'); fetchDashboard(); }
   
-  /** Changes transaction type filter for statistics */
+  // [EVENT] Filter statistik berdasarkan tipe transaksi
   function updateSFilter(k, v) { sF[k] = v; ['Pemasukan', 'Pengeluaran'].forEach(t => { const btn = document.getElementById('s-t-' + t); if(btn) btn.classList.toggle('active', sF.tipe === t); }); fetchDashboard(); }
   
-  /** Navigates history page */
+  // [UI] Navigasi halaman pada riwayat transaksi
   function changePage(d) { curPage += d; renderTrx(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
   
-  /** Sets current date and time as default */
+  // [UTIL] Set nilai default input tanggal ke waktu sekarang
   function setDefaultDate() { const now = new Date(); now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); document.getElementById('tglInput').value = now.toISOString().slice(0, 16); }
   
-  /** Requests and displays export preview data */
+  // [API] Ambil pratinjau data untuk kebutuhan ekspor
   function processExport(){const s=document.getElementById('ex-start').value,e=document.getElementById('ex-end').value;if(!s||!e){alert("Pilih tanggal!");return;}runServer("getExportData",[s,e],data=>{document.getElementById('export-preview-area').style.setProperty('display','block','important');document.getElementById('export-body').innerHTML=data.map(r=>`<tr><td>${r.kode}</td><td>${r.tgl}</td><td>${escapeHtml(r.wallet)}</td><td>${escapeHtml(r.keterangan)}</td><td>${escapeHtml(r.catatan)}</td><td class="text-success">${r.debit?'Rp '+r.debit.toLocaleString('id-ID'):'-'}</td><td class="text-danger">${r.kredit?'Rp '+r.kredit.toLocaleString('id-ID'):'-'}</td><td>Rp ${r.total.toLocaleString('id-ID')}</td></tr>`).join('');});}
   
-  /** Triggers CSV file download from table data */
+  // [UTIL] Generate dan download file CSV dari tabel pratinjau
   function downloadCSV() { const table = document.getElementById("table-export"); let csv = []; for (let i = 0; i < table.rows.length; i++) { let row = [], cols = table.rows[i].querySelectorAll("td, th"); for (let j = 0; j < cols.length; j++) row.push('"' + cols[j].innerText.replace(/Rp\s?|(?<=\d)\.(?=\d{3})/g, '').replace(/\n/g, ' ') + '"'); csv.push(row.join(",")); } const blob = new Blob(["\uFEFF" + csv.join("\n")], { type: "text/csv;charset=utf-8;" }); const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Export_${new Date().getTime()}.csv`; document.body.appendChild(link); link.click(); document.body.removeChild(link); }
 
-  /** Initialize app on load */
+  // [INIT] Jalankan fungsi inisialisasi saat window dimuat
   window.onload = () => { setDefaultDate(); loadWallets(); updateHDate(30); updateSDate(30); toggleUI(); };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
