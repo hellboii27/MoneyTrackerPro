@@ -38,6 +38,7 @@ function validateTransaksi(p){
 // [PERF] Hapus cache dashboard saat data berubah
 function clearDashboardCache() {
   CACHE.remove(WALLET_CACHE_KEY);
+  CACHE.put("DASH_VER", new Date().getTime().toString(), 600);
 }
 
 // [DB] Ambil saldo tiap dompet dari sheet Wallets
@@ -158,7 +159,8 @@ function getTransactions(f){
 
 // [PERF] Agregasi data dashboard menggunakan mekanisme caching
 function getDashboardData(f){
-  const cacheKey = DASH_CACHE_PREFIX + Utilities.base64Encode(JSON.stringify(f));
+  const ver = CACHE.get("DASH_VER") || "0";
+  const cacheKey = DASH_CACHE_PREFIX + ver + "_" + Utilities.base64Encode(JSON.stringify(f));
   const cached = CACHE.get(cacheKey);
   if(cached) return JSON.parse(cached);
   const trx=SH_TRX.getDataRange().getValues().slice(1);
