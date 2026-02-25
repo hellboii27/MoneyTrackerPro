@@ -17,22 +17,19 @@ Database tersimpan langsung di Google Drive milik pengguna.
 
 ## 📸 Preview
 
-### 💳 Dashboard / Input Transaction
+### 💳 Aplication
 
-![Dashboard Input](screenshots/Input.png)
+![Aplication](screenshots/Screenshot_1.png)
+![Aplication](screenshots/Screenshot_2.png)
+![Aplication](screenshots/Screenshot_3.png)
+![Aplication](screenshots/Screenshot_4.png)
+![Aplication](screenshots/Screenshot_5.png)
+![Aplication](screenshots/Screenshot_6.png)
 
-### 📜 Transaction History
+### 📊 Spreadsheet Database
 
-![Transaction History](screenshots/Riwayat.png)
-
-### 📊 Report & Analytics
-
-![Statistics Summary](screenshots/Statistik.png)
-![Statistics Chart](screenshots/StatistikChart.png)
-
-### 📥 Export CSV
-
-![Export CSV](screenshots/Ekspor.png)
+![Database](screenshots/Screenshot_7.png)
+![Database](screenshots/Screenshot_8.png)
 
 ---
 
@@ -118,7 +115,7 @@ Buat spreadsheet baru dengan struktur berikut.
 
 #### Sheet: `Transaksi`
 
-| Tanggal | Tipe | Kategori | Wallet | Nominal | Catatan |
+| Tanggal | Tipe | Kategori | Wallet | Nominal | Catatan | TRX ID |
 
 #### Sheet: `Wallets`
 
