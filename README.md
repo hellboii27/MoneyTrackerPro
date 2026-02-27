@@ -111,22 +111,24 @@ Cukup gunakan akun Google.
 
 Buat spreadsheet baru dengan struktur berikut.
 
-#### Sheet: `Transaksi`
+#### 📄 Sheet: `Transaksi`
 
 | Tanggal | Tipe | Kategori | Wallet | Nominal | Catatan | TRX ID |
+|---|---|---|---|---|---|---|
 
-#### Sheet: `Wallets`
+---
+
+#### 📄 Sheet: `Wallets`
 
 | Nama Wallet | Saldo |
+|---|---|
 
-Opsional: isi saldo awal pada sheet `Wallets`.
+> 💡 Opsional: isi saldo awal pada sheet `Wallets`.
 
 | Nama Wallet | Saldo |
-
+|---|---|
 | Uang Tunai | 10000 |
-
 | Bank BCA | 20000 |
-
 | GoPay | 30000 |
 
 ---
@@ -187,7 +189,9 @@ frontend/Index.html
 
 ## 📜 License
 
-Copyright © 2026 Bayu Wicaksono
+![License](https://img.shields.io/badge/license-MIT-34d399?style=flat-square)
+
+© 2026 Bayu Wicaksono
 For personal use.
 
 ---
