@@ -19,9 +19,9 @@ Database tersimpan langsung di Google Drive milik pengguna.
 
 ### 💳 Aplication
 
-![Aplication](screenshots/Screenshot_1.png) ![Aplication](screenshots/Screenshot_2.png)
-![Aplication](screenshots/Screenshot_3.png) ![Aplication](screenshots/Screenshot_4.png)
-![Aplication](screenshots/Screenshot_5.png) ![Aplication](screenshots/Screenshot_6.png)
+![Aplication](screenshots/Screenshot_1.png)  ![Aplication](screenshots/Screenshot_2.png)
+![Aplication](screenshots/Screenshot_3.png)  ![Aplication](screenshots/Screenshot_4.png)
+![Aplication](screenshots/Screenshot_5.png)  ![Aplication](screenshots/Screenshot_6.png)
 
 
 ### 📊 Spreadsheet Database
