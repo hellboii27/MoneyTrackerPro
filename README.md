@@ -204,12 +204,10 @@ Jika project ini membantu, jangan lupa ⭐ repository ini.
 
 ## Star History
 
-## Star History
-
 <a href="https://www.star-history.com/?repos=hellboii27%2FMoneyTrackerPro&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hellboii27/MoneyTrackerPro&type=date&theme=dark&legend=top-left&sealed_token=ESKZmp8H7OYY6RrmMkR1lquJHfvhcZYt4tzScQ8L6mxb42mlOxaxGiu9knGtSOhctPT7eUSV4NjZW-7D_1BAs4JxrASzV4szGHKSLV5xH8cOB_2p2z9FvA" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hellboii27/MoneyTrackerPro&type=date&legend=top-left&sealed_token=ESKZmp8H7OYY6RrmMkR1lquJHfvhcZYt4tzScQ8L6mxb42mlOxaxGiu9knGtSOhctPT7eUSV4NjZW-7D_1BAs4JxrASzV4szGHKSLV5xH8cOB_2p2z9FvA" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hellboii27/MoneyTrackerPro&type=date&legend=top-left&sealed_token=ESKZmp8H7OYY6RrmMkR1lquJHfvhcZYt4tzScQ8L6mxb42mlOxaxGiu9knGtSOhctPT7eUSV4NjZW-7D_1BAs4JxrASzV4szGHKSLV5xH8cOB_2p2z9FvA" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=hellboii27/MoneyTrackerPro&type=date&theme=dark&legend=top-left&sealed_token=ONiHzZjnjM9IPl7Q9QhzrevDoiYvW90x4Aaw8GuFLkvbdNZJvrJi7Jd7pjNiro8yUgj-lVlK4csSn9Qt1zrXBAW-2RgZJXi4E2lZYXuhAgoDv3mb59KB5A" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=hellboii27/MoneyTrackerPro&type=date&legend=top-left&sealed_token=ONiHzZjnjM9IPl7Q9QhzrevDoiYvW90x4Aaw8GuFLkvbdNZJvrJi7Jd7pjNiro8yUgj-lVlK4csSn9Qt1zrXBAW-2RgZJXi4E2lZYXuhAgoDv3mb59KB5A" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=hellboii27/MoneyTrackerPro&type=date&legend=top-left&sealed_token=ONiHzZjnjM9IPl7Q9QhzrevDoiYvW90x4Aaw8GuFLkvbdNZJvrJi7Jd7pjNiro8yUgj-lVlK4csSn9Qt1zrXBAW-2RgZJXi4E2lZYXuhAgoDv3mb59KB5A" />
  </picture>
 </a>
